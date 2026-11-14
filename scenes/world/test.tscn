@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://ba1yrp5nth6ie" path="res://art/world/test.png" id="1_yokrj"]
 [ext_resource type="PackedScene" uid="uid://cxwsbkl6junof" path="res://scenes/player/player.tscn" id="2_ujbsv"]
-[ext_resource type="PackedScene" uid="uid://b81n38prh37m0" path="res://scenes/enemy/flaming_skull.tscn" id="3_37g75"]
+[ext_resource type="PackedScene" uid="uid://kqqwbo4d2gmk" path="res://scenes/enemy/walker.tscn" id="3_37g75"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ujbsv"]
 texture = ExtResource("1_yokrj")
@@ -159,7 +159,7 @@ texture = ExtResource("1_yokrj")
 3:15/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_5mc57"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 3
 sources/0 = SubResource("TileSetAtlasSource_ujbsv")
 
 [node name="Node2D" type="Node2D" unique_id=53059285]
@@ -173,6 +173,7 @@ tile_set = SubResource("TileSet_5mc57")
 [node name="CharacterBody2D" parent="." unique_id=866312956 instance=ExtResource("2_ujbsv")]
 position = Vector2(297, -210)
 
-[node name="Flaming skull" parent="." unique_id=727223174 instance=ExtResource("3_37g75")]
-position = Vector2(984, -272)
-scale = Vector2(2, 2)
+[node name="Jumper" parent="." unique_id=1795100485 instance=ExtResource("3_37g75")]
+position = Vector2(979, -75)
+collision_layer = 2
+collision_mask = 2
