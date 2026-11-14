@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b81n38prh37m0"]
 
-[ext_resource type="Script" path="res://scripts/enemy/flaming_skull.gd" id="1_q2u1w"]
+[ext_resource type="Script" uid="uid://byc325j4ufqqh" path="res://scripts/enemy/flaming_skull.gd" id="1_q2u1w"]
 [ext_resource type="Texture2D" path="res://art/enemy/flaming skull.png" id="2_5uffa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pu0no"]
@@ -106,7 +106,7 @@ script = ExtResource("1_q2u1w")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=71064578]
 sprite_frames = SubResource("SpriteFrames_5mc57")
-frame_progress = 0.7633141
+frame_progress = 0.30439678
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1175622068]
 position = Vector2(1, 12)
