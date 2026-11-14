@@ -102,6 +102,8 @@ radius = 18.110771
 radius = 261.62952
 
 [node name="Flaming skull" type="CharacterBody2D" unique_id=727223174]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_q2u1w")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=71064578]
