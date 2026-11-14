@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-const speed = 500
+const SPEED = 500
 const JUMP_VELOCITY = 500
 
 @onready var arrow = $Arrow_pivot
@@ -9,20 +9,22 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta 
-	elif Input.is_action_pressed("jump"):
-			velocity.y = JUMP_VELOCITY * -1
+	#elif Input.is_action_pressed("jump"):
+			#velocity.y = JUMP_VELOCITY * -1
 		
-	if Input.is_action_pressed("left"):
-		velocity.x = -1 * speed
+	#if Input.is_action_pressed("left"):
+		#velocity.x = -1 * SPEED
 		
-	elif Input.is_action_pressed("right"):
-		velocity.x = 1 * speed
-	else:
-		velocity.x = 0
+	#elif Input.is_action_pressed("right"):
+		#velocity.x = 1 * SPEED
+	#else:
+		#velocity.x = 0
 	
 	move_and_slide()
 
 func _process(delta: float) -> void:
 	arrow.look_at(get_global_mouse_position())
 	arrow.rotation += deg_to_rad(90) 
-	
+
+func player() -> void:
+	pass
