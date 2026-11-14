@@ -2,33 +2,37 @@ extends CharacterBody2D
 
 const SPEED = 150.0
 const JUMP_VELOCITY = 500
+
 var player = null
 var player_attack = null
+var played_death = false
 
 @onready var bar = $ProgressBar
 @onready var anim = $AnimationPlayer
+@onready var anim_sprite = $AnimatedSprite2D
 
 func _ready() -> void:
 	bar.max_value = health
 
 func _process(delta: float) -> void:
 	bar.value = health
-	if self.health <= 0:
-		self.hide()
+	if health <= 0:
 		self.queue_free()
+		self.hide()
 	
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+		anim_sprite.play("default")
 
 	if player:
 		var dx = player.global_position.x - global_position.x
-		if abs(dx) > 5.0:                      # small dead zone to stop jittering
+		if abs(dx) > 5.0:
 			velocity.x = sign(dx) * SPEED
 		else:
 			velocity.x = 0
 		
-		if is_on_floor():
+		if is_on_floor() and health >= 0:
 			velocity.y = -JUMP_VELOCITY
 			
 	move_and_slide()

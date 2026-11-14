@@ -55,3 +55,4 @@ offset_bottom = -560.0
 theme_override_font_sizes/font_size = 75
 theme_override_styles/background = SubResource("StyleBoxFlat_5mc57")
 theme_override_styles/fill = SubResource("StyleBoxFlat_dv1h4")
+allow_greater = true
