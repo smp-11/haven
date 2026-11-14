@@ -20,8 +20,7 @@ var dash_direction = Vector2.RIGHT
 
 func _physics_process(delta: float) -> void:
 	var direction = Input.get_axis("left", "right")
-	#if
-	#cooldown_timer = max(cooldown_timer - delta, 0.0)
+
 	
 	if is_dashing:
 		dash_timer -= delta
@@ -34,12 +33,10 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	
-	#Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta	
 	
 	if Input.is_action_just_pressed("jump"):
-		print(is_on_floor())
 		if is_on_floor():
 			velocity.y = -JUMP_VELOCITY
 		else:

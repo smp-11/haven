@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cd7t0alaettr1"]
+
+[ext_resource type="Script" uid="uid://dcaxgieiu7u8b" path="res://scripts/UI/title.gd" id="1_i7dbw"]
+
+[node name="Control" type="Control" unique_id=991968547]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i7dbw")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1250273076]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 651.0
+
+[node name="Button" type="Button" parent="." unique_id=1401296042]
+layout_mode = 0
+offset_left = 517.0
+offset_top = 259.0
+offset_right = 657.0
+offset_bottom = 305.0
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

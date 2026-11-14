@@ -179,7 +179,8 @@ position = Vector2(297, -210)
 position = Vector2(979, -75)
 
 [node name="Flaming skull" parent="." unique_id=727223174 instance=ExtResource("4_xrc3a")]
-position = Vector2(-1569, -892)
+position = Vector2(-1000, -500)
+rotation = 0.03445837
 scale = Vector2(3, 3)
 
 [node name="Jumper2" parent="." unique_id=1033580419 instance=ExtResource("3_37g75")]

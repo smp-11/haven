@@ -107,6 +107,7 @@ collision_mask = 2
 script = ExtResource("1_q2u1w")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=71064578]
+texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_5mc57")
 frame_progress = 0.30439678
 
