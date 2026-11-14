@@ -7,11 +7,67 @@
 size = Vector2(130, 134)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mgv6h"]
-radius = 389.01157
+radius = 860.1308
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_25d2x"]
+size = Vector2(156, 159)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mc57"]
+bg_color = Color(0.16924536, 0.16924527, 0.16924527, 0.6745098)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dv1h4"]
+bg_color = Color(0.6156863, 0.09411765, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="Animation" id="Animation_25d2x"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.6745098, 0.10980392, 0.047058824, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_8ogjf"]
+resource_name = "damage"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.43333334, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.6745098, 0.10980392, 0.047058824, 0), Color(0.6745098, 0.10980392, 0.047058824, 0.60784316), Color(0.6745098, 0.10980392, 0.047058824, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8ljgr"]
+_data = {
+&"RESET": SubResource("Animation_25d2x"),
+&"damage": SubResource("Animation_8ogjf")
+}
 
 [node name="Pogo" type="CharacterBody2D" unique_id=1795100485]
-collision_layer = 2
-collision_mask = 2
+slide_on_ceiling = false
 script = ExtResource("1_25d2x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=408389304]
@@ -29,6 +85,31 @@ shape = SubResource("CircleShape2D_mgv6h")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=287716505]
 texture = ExtResource("2_8ogjf")
 
+[node name="Damage zone" type="Area2D" parent="." unique_id=1847560130]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Damage zone" unique_id=175937415]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_25d2x")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1281791677]
+offset_left = -66.0
+offset_top = 76.0
+offset_right = 65.0
+offset_bottom = 103.0
+theme_override_styles/background = SubResource("StyleBoxFlat_5mc57")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dv1h4")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1900301530]
+libraries/ = SubResource("AnimationLibrary_8ljgr")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=707536361]
+offset_left = -66.0
+offset_top = -66.0
+offset_right = 65.0
+offset_bottom = 64.0
+color = Color(0.6745098, 0.10980392, 0.047058824, 0)
+
 [connection signal="body_entered" from="Detection zone" to="." method="_on_detection_zone_body_entered"]
 [connection signal="body_exited" from="Detection zone" to="." method="_on_detection_zone_body_exited"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
+[connection signal="body_entered" from="Damage zone" to="." method="_on_damage_zone_body_entered"]

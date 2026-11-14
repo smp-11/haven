@@ -6,7 +6,7 @@ const DECELARATION = 1000
 
 const JUMP_VELOCITY = 500
 
-const MAX_DASH_BOUNCES = 2
+const MAX_DASH_BOUNCES = 5
 
 const DASH_SPEED = 2000.0
 const DASH_TIME = 0.17
@@ -15,6 +15,8 @@ const DASH_COOLDOWN = 0.5
 const AIM_TIME = 1.0
 
 @export var bar_width := 32.0
+
+var health = 100
 
 class DashState:
 	var position := Vector2.ZERO
@@ -39,9 +41,21 @@ var predicted_path = PackedVector2Array()
 var predicted_bounces = PackedVector2Array()
 
 @onready var arrow = $Arrow_pivot
+@onready var bar = $ProgressBar
+
+func _process(delta: float) -> void:
+	bar.value = health
+	Global.player_dashing_f(is_dashing)
+	arrow.look_at(get_global_mouse_position())
+	arrow.rotation += deg_to_rad(90)
+
+	if is_aiming:
+		_process_aiming(delta)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	bar.max_value = health
+
 
 func _physics_process(delta: float) -> void:
 	if is_aiming:
@@ -60,12 +74,6 @@ func _physics_process(delta: float) -> void:
 
 	prev_velocity_y = velocity.y
 
-func _process(delta: float) -> void:
-	arrow.look_at(get_global_mouse_position())
-	arrow.rotation += deg_to_rad(90)
-
-	if is_aiming:
-		_process_aiming(delta)
 
 func get_dash_direction() -> Vector2:
 	var input_dir = global_position.direction_to(get_global_mouse_position())
@@ -77,7 +85,7 @@ func get_dash_direction() -> Vector2:
 func dashTo(direction: Vector2) -> void:
 	if dash_cooldown > 0.0:
 		return
-
+	
 	dash_state = DashState.new()
 	dash_state.position = global_position
 	dash_state.leg_start = global_position
@@ -250,3 +258,6 @@ func _draw() -> void:
 
 func player() -> void:
 	pass
+
+func take_damage(val):
+	health -= val

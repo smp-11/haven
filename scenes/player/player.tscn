@@ -7,7 +7,26 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_5mc57"]
 radius = 39.051247
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mc57"]
+bg_color = Color(0.16924536, 0.16924527, 0.16924527, 0.6745098)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dv1h4"]
+bg_color = Color(0.6156863, 0.09411765, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=866312956]
+collision_layer = 3
 script = ExtResource("1_dovo2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1185410352]
@@ -19,6 +38,7 @@ scale = Vector2(10, 10)
 texture = ExtResource("2_gmlin")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1741982023]
+zoom = Vector2(0.5, 0.5)
 
 [node name="Arrow_pivot" type="Marker2D" parent="." unique_id=768424888]
 
@@ -26,3 +46,12 @@ texture = ExtResource("2_gmlin")
 position = Vector2(0, -135)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_gmlin")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=2040570493]
+offset_left = -1144.0
+offset_top = -647.0
+offset_right = -210.0
+offset_bottom = -560.0
+theme_override_font_sizes/font_size = 75
+theme_override_styles/background = SubResource("StyleBoxFlat_5mc57")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dv1h4")
