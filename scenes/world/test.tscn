@@ -2,7 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://ba1yrp5nth6ie" path="res://art/world/test.png" id="1_yokrj"]
 [ext_resource type="PackedScene" uid="uid://cxwsbkl6junof" path="res://scenes/player/player.tscn" id="2_ujbsv"]
-[ext_resource type="PackedScene" uid="uid://kqqwbo4d2gmk" path="res://scenes/enemy/walker.tscn" id="3_37g75"]
+[ext_resource type="PackedScene" uid="uid://kqqwbo4d2gmk" path="res://scenes/enemy/jumper.tscn" id="3_37g75"]
+[ext_resource type="PackedScene" uid="uid://b81n38prh37m0" path="res://scenes/enemy/flaming_skull.tscn" id="4_xrc3a"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ujbsv"]
 texture = ExtResource("1_yokrj")
@@ -177,3 +178,13 @@ position = Vector2(297, -210)
 position = Vector2(979, -75)
 collision_layer = 2
 collision_mask = 2
+
+[node name="Flaming skull" parent="." unique_id=727223174 instance=ExtResource("4_xrc3a")]
+position = Vector2(-1569, -892)
+scale = Vector2(3, 3)
+
+[node name="Jumper2" parent="." unique_id=1033580419 instance=ExtResource("3_37g75")]
+position = Vector2(2410, -823)
+
+[node name="Jumper3" parent="." unique_id=214082647 instance=ExtResource("3_37g75")]
+position = Vector2(-3273, -163)
