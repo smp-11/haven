@@ -6,11 +6,13 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dv1h4"]
 size = Vector2(130, 132)
 
-[node name="RigidBody2D" type="RigidBody2D" unique_id=1082968034]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=866312956]
 script = ExtResource("1_dovo2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1029765474]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1185410352]
 shape = SubResource("RectangleShape2D_dv1h4")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1822887752]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2016492262]
 texture = ExtResource("2_gmlin")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1741982023]
