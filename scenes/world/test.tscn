@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://ba1yrp5nth6ie" path="res://art/world/test.png" id="1_yokrj"]
 [ext_resource type="PackedScene" uid="uid://cxwsbkl6junof" path="res://scenes/player/player.tscn" id="2_ujbsv"]
+[ext_resource type="PackedScene" uid="uid://b81n38prh37m0" path="res://scenes/enemy/flaming_skull.tscn" id="3_37g75"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ujbsv"]
 texture = ExtResource("1_yokrj")
@@ -171,3 +172,7 @@ tile_set = SubResource("TileSet_5mc57")
 
 [node name="CharacterBody2D" parent="." unique_id=866312956 instance=ExtResource("2_ujbsv")]
 position = Vector2(297, -210)
+
+[node name="Flaming skull" parent="." unique_id=727223174 instance=ExtResource("3_37g75")]
+position = Vector2(984, -272)
+scale = Vector2(2, 2)
