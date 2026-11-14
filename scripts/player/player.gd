@@ -38,6 +38,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _physics_process(delta: float) -> void:
+<<<<<<< HEAD
 	if is_aiming:
 		return
 		
@@ -45,6 +46,35 @@ func _physics_process(delta: float) -> void:
 	
 	if is_dashing:
 		_process_dash(delta)
+=======
+	var direction = Input.get_axis("left", "right")
+
+	
+	if is_dashing:
+		dash_timer -= delta
+		if dash_timer > 0:
+			velocity = dash_direction * DASH_SPEED
+		else:
+			dash_timer = 0;
+			is_dashing = false
+			velocity = dash_direction * SPEED 
+		move_and_slide()
+		return
+	
+	if not is_on_floor():
+		velocity += get_gravity() * delta	
+	
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor():
+			velocity.y = -JUMP_VELOCITY
+		else:
+			dash_timer = DASH_TIME
+			dash_direction = get_dash_direction()
+			is_dashing = true
+			
+	if direction != 0.0:
+		velocity.x = move_toward(velocity.x, direction * SPEED, delta * ACCELERATION)
+>>>>>>> 0170ae052f10f86e80a62be395bcb08e9a716d60
 	else:
 		_process_gravity(delta)
 		_process_input(delta)

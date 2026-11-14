@@ -1,19 +1,21 @@
 [gd_scene format=3 uid="uid://cxwsbkl6junof"]
 
 [ext_resource type="Script" uid="uid://cbhm6e3q4tavy" path="res://scripts/player/player.gd" id="1_dovo2"]
-[ext_resource type="Texture2D" uid="uid://b6t47lf32p80a" path="res://icon.svg" id="2_gmlin"]
+[ext_resource type="Texture2D" uid="uid://jvastsluxg6m" path="res://art/player/orb_single_front.png" id="2_gmlin"]
 [ext_resource type="Texture2D" uid="uid://cpyredcs76b0" path="res://art/player/Arrow.png" id="3_gmlin"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dv1h4"]
-size = Vector2(130, 132)
+[sub_resource type="CircleShape2D" id="CircleShape2D_5mc57"]
+radius = 39.051247
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=866312956]
 script = ExtResource("1_dovo2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1185410352]
-shape = SubResource("RectangleShape2D_dv1h4")
+shape = SubResource("CircleShape2D_5mc57")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2016492262]
+texture_filter = 1
+scale = Vector2(10, 10)
 texture = ExtResource("2_gmlin")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1741982023]
