@@ -171,4 +171,3 @@ tile_set = SubResource("TileSet_5mc57")
 
 [node name="CharacterBody2D" parent="." unique_id=866312956 instance=ExtResource("2_ujbsv")]
 position = Vector2(88, -90)
-up_direction = Vector2(0, 1)
