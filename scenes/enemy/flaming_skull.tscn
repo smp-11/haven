@@ -179,10 +179,11 @@ shape = SubResource("CircleShape2D_dv1h4")
 [node name="Cooldown" type="Timer" parent="." unique_id=922206943]
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=2147191693]
-offset_left = -28.0
-offset_top = 44.0
-offset_right = 27.0
-offset_bottom = 67.0
+offset_left = -14.0
+offset_top = 36.0
+offset_right = 41.0
+offset_bottom = 59.0
+scale = Vector2(0.5, 0.5)
 theme_override_styles/background = SubResource("StyleBoxFlat_q2u1w")
 theme_override_styles/fill = SubResource("StyleBoxFlat_5uffa")
 

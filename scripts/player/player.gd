@@ -1,263 +1,256 @@
 extends CharacterBody2D
 
-const SPEED = 500
-const ACCELERATION = 5000
-const DECELARATION = 1000
-
-const JUMP_VELOCITY = 500
-
-const MAX_DASH_BOUNCES = 5
+const RUN_SPEED = 700
+const RUN_ACCELERATION = 5000
+const RUN_DECELERATION = 1000
+const JUMP_VELOCITY = -600
 
 const DASH_SPEED = 2000.0
-const DASH_TIME = 0.17
-const DASH_COOLDOWN = 0.5
+const DASH_DISTANCE = DASH_SPEED * 0.3
+const DASH_MAX_BOUNCES = 5
+const DASH_COOLDOWN = 1.5
+const DASH_COOLDOWN_REDUCTION_PER_BOUNCE = 0.25
+const DASH_END_THRESHOLD = 0.001
+const DASH_MIN_BOUNCE_APPROACH = -0.1
 
-const AIM_TIME = 1.0
+const AIM_DURATION = 2.0
+const MAX_PREVIEW_STEPS = 600
+const PREVIEW_WIDTH = 32.0
+const COOLDOWN_RING_RADIUS = 50.0
+const AIM_RING_RADIUS = 40.0
+const RING_START_ANGLE = -PI / 2
 
-@export var bar_width := 32.0
+const PREVIEW_AREA_COLOR = Color(1, 1, 1, 0.25)
+const PREVIEW_LINE_COLOR = Color(1, 1, 1, 0.9)
+const RING_BACK_COLOR = Color(1, 1, 1, 0.15)
+const COOLDOWN_COLOR = Color.AQUA
+const AIM_TIMER_COLOR = Color(1, 1, 1, 0.5)
 
 var health = 100
 
-class DashState:
-	var position := Vector2.ZERO
-	var direction := Vector2.RIGHT
-	var remaining := 0.0
-	var leg_start := Vector2.ZERO
-	var bounces := 0
+var is_dashing := false
+var dash_direction := Vector2.RIGHT
+var dash_remaining := 0.0
+var dash_leg_start := Vector2.ZERO
+var dash_bounces := 0
+var dash_cooldown_left := 0.0
+var dash_cooldown_total := DASH_COOLDOWN
 
-var facing = 1
-var should_jump = false
-var should_dash = false
+var is_aiming := false
+var aim_can_confirm := false
+var aim_time_left := 0.0
+var preview_path := PackedVector2Array()
+var preview_bounce_points := PackedVector2Array()
 
-var is_dashing = false
-var dash_cooldown = 0.0
-var dash_state: DashState
-
-var is_aiming = false
-var aim_ticks = 0.0
-var aim_used = false
-var prev_velocity_y = 0.0
-var predicted_path = PackedVector2Array()
-var predicted_bounces = PackedVector2Array()
-
-@onready var arrow = $Arrow_pivot
-@onready var bar = $ProgressBar
-
-func _process(delta: float) -> void:
-	bar.value = health
-	Global.player_dashing_f(is_dashing)
-	arrow.look_at(get_global_mouse_position())
-	arrow.rotation += deg_to_rad(90)
-
-	if is_aiming:
-		_process_aiming(delta)
-
-func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	bar.max_value = health
+@onready var arrow_pivot = $Arrow_pivot
+@onready var health_bar = $ProgressBar
 
 
-func _physics_process(delta: float) -> void:
-	if is_aiming:
+func player() -> void:
+	pass
+
+func take_damage(amount):
+	health -= amount
+
+func kill():
+	get_tree().change_scene_to_file(ResourceManager.title)
+
+func get_mouse_direction() -> Vector2:
+	var direction := global_position.direction_to(get_global_mouse_position())
+	return direction if direction != Vector2.ZERO else Vector2.RIGHT
+
+
+func start_dash(direction: Vector2) -> void:
+	if dash_cooldown_left > 0.0:
 		return
-
-	_process_timers(delta)
-
-	if is_dashing:
-		_process_dash(delta)
-	else:
-		_process_gravity(delta)
-		_process_input(delta)
-		_process_movement(delta)
-		move_and_slide()
-		_check_apex()
-
-	prev_velocity_y = velocity.y
-
-
-func get_dash_direction() -> Vector2:
-	var input_dir = global_position.direction_to(get_global_mouse_position())
-
-	if input_dir != Vector2.ZERO:
-		return input_dir
-	return Vector2.RIGHT
-
-func dashTo(direction: Vector2) -> void:
-	if dash_cooldown > 0.0:
-		return
-	
-	dash_state = DashState.new()
-	dash_state.position = global_position
-	dash_state.leg_start = global_position
-	dash_state.direction = direction
-	dash_state.remaining = DASH_SPEED * DASH_TIME
+	dash_direction = direction
+	dash_remaining = DASH_DISTANCE
+	dash_leg_start = global_position
+	dash_bounces = 0
 	is_dashing = true
 
-func jump(jump_velocity: float) -> void:
-	velocity.y = -jump_velocity
-
-func _move(state: DashState, motion: Vector2, simulate: bool) -> KinematicCollision2D:
-	if simulate:
-		var xf := global_transform
-		xf.origin = state.position
-		var col := KinematicCollision2D.new()
-		if test_move(xf, motion, col):
-			state.position += col.get_travel()
-			return col
-		state.position += motion
-		return null
-
-	var real_col := move_and_collide(motion)
-	state.position = global_position
-	return real_col
-
-func _advance_dash(state: DashState, step: float, simulate: bool) -> void:
-	var distance := minf(DASH_SPEED * step, state.remaining)
-	var col := _move(state, state.direction * distance, simulate)
-
-	if col == null:
-		state.remaining -= distance
-		return
-
-	var normal := col.get_normal()
-	state.remaining -= col.get_travel().length()
-
-	if state.bounces < MAX_DASH_BOUNCES and state.direction.dot(normal) < -0.1:
-		state.remaining += state.position.distance_to(state.leg_start)
-		state.direction = state.direction.bounce(normal)
-		state.leg_start = state.position
-		state.bounces += 1
-		return
-
-	var slide := col.get_remainder().slide(normal)
-	state.remaining -= slide.length()
-	_move(state, slide, simulate)
-
-func _process_dash(delta: float) -> void:
-	_advance_dash(dash_state, delta, false)
-	velocity = dash_state.direction * DASH_SPEED
-
-	if dash_state.remaining <= 0.001:
-		velocity = dash_state.direction * SPEED
-		dash_cooldown = DASH_COOLDOWN
-		is_dashing = false
-
-func _process_gravity(delta: float) -> void:
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-func _process_input(delta: float) -> void:
-	facing = Input.get_axis("left", "right")
-
-	if Input.is_action_just_pressed("jump"):
-		if is_on_floor():
-			should_jump = true
-		else:
-			should_dash = true
-
-func _process_movement(delta: float) -> void:
-	if should_jump:
-		jump(JUMP_VELOCITY)
-		should_jump = false
-	elif should_dash:
-		dashTo(get_dash_direction())
-		should_dash = false
-
-	if facing != 0.0:
-		velocity.x = move_toward(velocity.x, facing * SPEED, delta * ACCELERATION)
-	else:
-		velocity.x = move_toward(velocity.x, 0.0, DECELARATION * delta)
-
-func _process_timers(delta: float) -> void:
-	dash_cooldown = max(dash_cooldown - delta, 0.0)
-	if is_on_floor():
-		aim_used = false
-
-func _check_apex() -> void:
-	if is_on_floor() or aim_used or dash_cooldown > 0.0:
-		return
-	if prev_velocity_y < 0.0 and velocity.y >= 0.0:
-		start_aiming()
 
 func start_aiming() -> void:
 	is_aiming = true
-	aim_used = true
-	aim_ticks = AIM_TIME
+	aim_can_confirm = false
+	aim_time_left = AIM_DURATION
 	get_tree().paused = true
 
 func stop_aiming() -> void:
 	is_aiming = false
 	get_tree().paused = false
-	predicted_path.clear()
-	predicted_bounces.clear()
-	queue_redraw()
+	preview_path.clear()
+	preview_bounce_points.clear()
 
-func _process_aiming(delta: float) -> void:
-	aim_ticks -= delta
+func _preview_move(from_point: Vector2, motion: Vector2) -> KinematicCollision2D:
+	var from_transform := global_transform
+	from_transform.origin = from_point
+	var collision := KinematicCollision2D.new()
+	return collision if test_move(from_transform, motion, collision) else null
+
+func _update_preview() -> void:
+	preview_path.clear()
+	preview_bounce_points.clear()
+
+	var point := global_position
+	var direction := get_mouse_direction()
+	var leg_start := point
+	var remaining := DASH_DISTANCE
+	var bounces := 0
+	var step_time := 1.0 / Engine.physics_ticks_per_second
+
+	preview_path.append(point)
+
+	for _i in MAX_PREVIEW_STEPS:
+		if remaining <= DASH_END_THRESHOLD:
+			break
+
+		var distance := minf(DASH_SPEED * step_time, remaining)
+		var motion := direction * distance
+		var collision := _preview_move(point, motion)
+
+		if collision == null:
+			point += motion
+			remaining -= distance
+		else:
+			point += collision.get_travel()
+			remaining -= collision.get_travel().length()
+			var normal := collision.get_normal()
+
+			if bounces < DASH_MAX_BOUNCES and direction.dot(normal) < DASH_MIN_BOUNCE_APPROACH:
+				remaining += point.distance_to(leg_start)
+				direction = direction.bounce(normal)
+				leg_start = point
+				bounces += 1
+				preview_bounce_points.append(point)
+			else:
+				var slide := collision.get_remainder().slide(normal)
+				remaining -= slide.length()
+				var slide_collision := _preview_move(point, slide)
+				point += slide_collision.get_travel() if slide_collision else slide
+
+		preview_path.append(point)
+
+func _update_aiming(delta: float) -> void:
+	aim_time_left -= delta
+
+	if not Input.is_action_pressed("dash"):
+		aim_can_confirm = true
 
 	if Input.is_action_just_pressed("jump"):
-		var dir = get_dash_direction()
 		stop_aiming()
-		dashTo(dir)
-		return
-
-	if aim_ticks <= 0.0:
+		velocity.y = JUMP_VELOCITY
+	elif aim_can_confirm and Input.is_action_just_pressed("dash"):
+		var direction := get_mouse_direction()
 		stop_aiming()
+		start_dash(direction)
+	elif aim_time_left <= 0.0:
+		stop_aiming()
+	else:
+		_update_preview()
+
+
+func _draw_progress_ring(radius: float, progress: float, color: Color, width: float) -> void:
+	draw_arc(Vector2.ZERO, radius, RING_START_ANGLE, RING_START_ANGLE + TAU * progress, 48, color, width, true)
+
+func _draw_cooldown_ring() -> void:
+	if dash_cooldown_left <= 0.0:
 		return
+	var progress := 1.0 - dash_cooldown_left / dash_cooldown_total
+	_draw_progress_ring(COOLDOWN_RING_RADIUS, 1.0, RING_BACK_COLOR, 4.0)
+	_draw_progress_ring(COOLDOWN_RING_RADIUS, progress, COOLDOWN_COLOR, 4.0)
 
-	_predict_dash_path(get_dash_direction())
-	queue_redraw()
+func _draw_preview() -> void:
+	var points := PackedVector2Array()
+	for point in preview_path:
+		points.append(to_local(point))
 
-func _predict_dash_path(dir: Vector2) -> void:
-	predicted_path.clear()
-	predicted_bounces.clear()
+	if points.size() > 1:
+		draw_polyline(points, PREVIEW_AREA_COLOR, PREVIEW_WIDTH, true)
+		draw_polyline(points, PREVIEW_LINE_COLOR, 2.0, true)
+		draw_circle(points[points.size() - 1], PREVIEW_WIDTH * 0.5, PREVIEW_AREA_COLOR)
 
-	var state := DashState.new()
-	state.position = global_position
-	state.leg_start = global_position
-	state.direction = dir
-	state.remaining = DASH_SPEED * DASH_TIME
+	for point in preview_bounce_points:
+		draw_circle(to_local(point), 7.0, Color.ORANGE)
 
-	var step := 1.0 / Engine.physics_ticks_per_second
-	var guard := 0
+func _draw_crosshair(center: Vector2) -> void:
+	draw_arc(center, 14.0, 0.0, TAU, 24, Color.WHITE, 2.0)
+	for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+		draw_line(center + direction * 8.0, center + direction * 24.0, Color.WHITE, 2.0)
 
-	predicted_path.append(state.position)
-
-	while state.remaining > 0.001 and guard < 600:
-		guard += 1
-		var before := state.bounces
-		_advance_dash(state, step, true)
-		predicted_path.append(state.position)
-		if state.bounces > before:
-			predicted_bounces.append(state.position)
+func _draw_aim_timer() -> void:
+	var progress := clampf(aim_time_left / AIM_DURATION, 0.0, 1.0)
+	_draw_progress_ring(AIM_RING_RADIUS, progress, AIM_TIMER_COLOR, 3.0)
 
 func _draw() -> void:
-	if not is_aiming:
+	_draw_cooldown_ring()
+
+	if is_aiming:
+		_draw_preview()
+		_draw_crosshair(to_local(get_global_mouse_position()))
+		_draw_aim_timer()
+
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	health_bar.max_value = health
+
+func _process(delta: float) -> void:
+	health_bar.value = health
+	Global.player_dashing_f(is_dashing)
+	arrow_pivot.look_at(get_global_mouse_position())
+	arrow_pivot.rotation += deg_to_rad(90)
+	queue_redraw()
+
+	if is_aiming:
+		_update_aiming(delta)
+
+func _physics_process(delta: float) -> void:
+	if is_aiming:
 		return
 
-	if predicted_path.size() > 1:
-		var points = PackedVector2Array()
-		for p in predicted_path:
-			points.append(to_local(p))
-		draw_polyline(points, Color(1, 1, 1, 0.25), bar_width, true)
-		draw_polyline(points, Color(1, 1, 1, 0.9), 2.0, true)
-		draw_circle(points[points.size() - 1], bar_width * 0.5, Color(1, 1, 1, 0.35))
+	dash_cooldown_left = maxf(dash_cooldown_left - delta, 0.0)
 
-	for p in predicted_bounces:
-		draw_circle(to_local(p), 7.0, Color.ORANGE)
+	if is_dashing:
+		var distance := minf(DASH_SPEED * delta, dash_remaining)
+		var collision := move_and_collide(dash_direction * distance)
 
-	var m = to_local(get_global_mouse_position())
-	draw_arc(m, 14.0, 0.0, TAU, 24, Color.WHITE, 2.0)
-	draw_line(m + Vector2(-24, 0), m + Vector2(-8, 0), Color.WHITE, 2.0)
-	draw_line(m + Vector2(8, 0), m + Vector2(24, 0), Color.WHITE, 2.0)
-	draw_line(m + Vector2(0, -24), m + Vector2(0, -8), Color.WHITE, 2.0)
-	draw_line(m + Vector2(0, 8), m + Vector2(0, 24), Color.WHITE, 2.0)
+		if collision == null:
+			dash_remaining -= distance
+		else:
+			dash_remaining -= collision.get_travel().length()
+			var normal := collision.get_normal()
 
-	var ratio = clampf(aim_ticks / AIM_TIME, 0.0, 1.0)
-	draw_arc(Vector2.ZERO, 40.0, -PI / 2, -PI / 2 + TAU * ratio, 32, Color(1, 1, 1, 0.5), 3.0)
+			if dash_bounces < DASH_MAX_BOUNCES and dash_direction.dot(normal) < DASH_MIN_BOUNCE_APPROACH:
+				dash_remaining += global_position.distance_to(dash_leg_start)
+				dash_direction = dash_direction.bounce(normal)
+				dash_leg_start = global_position
+				dash_bounces += 1
+			else:
+				var slide := collision.get_remainder().slide(normal)
+				dash_remaining -= slide.length()
+				move_and_collide(slide)
 
-func player() -> void:
-	pass
+		velocity = dash_direction * DASH_SPEED
 
-func take_damage(val):
-	health -= val
+		if dash_remaining <= DASH_END_THRESHOLD:
+			velocity = dash_direction * RUN_SPEED
+			dash_cooldown_total = DASH_COOLDOWN * maxf(1.0 - dash_bounces * DASH_COOLDOWN_REDUCTION_PER_BOUNCE, 0.0)
+			dash_cooldown_left = dash_cooldown_total
+			is_dashing = false
+		return
+
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	if Input.is_action_just_pressed("dash") and dash_cooldown_left <= 0.0:
+		start_aiming()
+
+	var input_direction := Input.get_axis("left", "right")
+	var rate := RUN_ACCELERATION if input_direction != 0.0 else RUN_DECELERATION
+	velocity.x = move_toward(velocity.x, input_direction * RUN_SPEED, rate * delta)
+
+	move_and_slide()
