@@ -15,6 +15,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 1 * speed
 	elif Input.is_action_pressed("jump"):
 		if is_on_floor():
+			print("o")
 			velocity.y = JUMP_VELOCITY * -1
 	else:
 		velocity.x = 0
