@@ -1,14 +1,13 @@
 extends CharacterBody2D
 
 const speed = 500
-const JUMP_VELOCITY = 400
+const JUMP_VELOCITY = 500
 
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta 
 	elif Input.is_action_pressed("jump"):
-			print("o")
 			velocity.y = JUMP_VELOCITY * -1
 		
 	if Input.is_action_pressed("left"):
