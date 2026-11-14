@@ -18,7 +18,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 1 * speed
 	else:
 		velocity.x = 0
-		
+	
+	move_and_slide()
+
 func _process(delta: float) -> void:
 	arrow.look_at(get_global_mouse_position())
-	move_and_slide()
+	arrow.rotation += deg_to_rad(90) 
+	

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cbhm6e3q4tavy" path="res://scripts/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://b6t47lf32p80a" path="res://icon.svg" id="2_gmlin"]
-[ext_resource type="Texture2D" uid="uid://dsikb4inhp7f6" path="res://art/player/3 arrow Black outline.png" id="3_gmlin"]
+[ext_resource type="Texture2D" uid="uid://cpyredcs76b0" path="res://art/player/Arrow.png" id="3_gmlin"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dv1h4"]
 size = Vector2(130, 132)
@@ -19,9 +19,8 @@ texture = ExtResource("2_gmlin")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1741982023]
 
 [node name="Arrow_pivot" type="Marker2D" parent="." unique_id=768424888]
-position = Vector2(0, -78)
 
 [node name="Arrow" type="Sprite2D" parent="Arrow_pivot" unique_id=677479448]
-position = Vector2(-1, -59)
+position = Vector2(0, -135)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_gmlin")
