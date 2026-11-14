@@ -3,6 +3,7 @@ extends CharacterBody2D
 const speed = 500
 const JUMP_VELOCITY = 500
 
+@onready var arrow = $Arrow_pivot
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -18,5 +19,6 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = 0
 		
-
+func _process(delta: float) -> void:
+	arrow.look_at(get_global_mouse_position())
 	move_and_slide()
