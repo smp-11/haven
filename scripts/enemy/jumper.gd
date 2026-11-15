@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 
 	if player:
 		var dx = player.global_position.x - global_position.x
-		if abs(dx) > 5.0:                      # small dead zone to stop jittering
+		if abs(dx) > 5.0:
 			velocity.x = sign(dx) * SPEED
 		else:
 			velocity.x = 0

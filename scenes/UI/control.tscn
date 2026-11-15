@@ -1,6 +1,105 @@
 [gd_scene format=3 uid="uid://cd7t0alaettr1"]
 
 [ext_resource type="Script" uid="uid://dcaxgieiu7u8b" path="res://scripts/UI/title.gd" id="1_i7dbw"]
+[ext_resource type="Texture2D" uid="uid://caqirwgv6a46p" path="res://art/UI/tile000.png" id="2_jvk2p"]
+[ext_resource type="Texture2D" uid="uid://cb6dagcdcgycc" path="res://art/world/Star.png" id="3_lqgur"]
+[ext_resource type="Texture2D" uid="uid://b7i3u8wopkumw" path="res://art/world/gem_amethyst_strip_4f.png" id="4_lqgur"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5mc57"]
+font_size = 14
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2yrtl"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ryxm"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ex8ew"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cetho"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1fmla"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hge6c"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q2y38"]
+atlas = ExtResource("3_lqgur")
+region = Rect2(288, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5mc57"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2yrtl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ryxm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ex8ew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cetho")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1fmla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hge6c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q2y38")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfe4l"]
+atlas = ExtResource("4_lqgur")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_elthy"]
+atlas = ExtResource("4_lqgur")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ltarh"]
+atlas = ExtResource("4_lqgur")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a64mt"]
+atlas = ExtResource("4_lqgur")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dv1h4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cfe4l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_elthy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ltarh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a64mt")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Control" type="Control" unique_id=991968547]
 layout_mode = 3
@@ -16,11 +115,128 @@ layout_mode = 0
 offset_right = 1153.0
 offset_bottom = 651.0
 
-[node name="Button" type="Button" parent="." unique_id=1401296042]
+[node name="Button" type="Button" parent="." unique_id=2116821894]
+texture_filter = 1
 layout_mode = 0
-offset_left = 517.0
-offset_top = 259.0
-offset_right = 657.0
-offset_bottom = 305.0
+offset_left = 2.0
+offset_top = 530.0
+offset_right = 74.0
+offset_bottom = 570.0
+scale = Vector2(3, 3)
+icon = ExtResource("2_jvk2p")
+flat = true
+
+[node name="Label" type="Label" parent="Button" unique_id=1529423177]
+layout_mode = 0
+offset_left = 10.333334
+offset_top = 8.666667
+offset_right = 71.333336
+offset_bottom = 31.666668
+text = "Tutorial"
+label_settings = SubResource("LabelSettings_5mc57")
+
+[node name="Level 2" type="Button" parent="." unique_id=430414916]
+texture_filter = 1
+layout_mode = 0
+offset_left = 633.0
+offset_top = 412.0
+offset_right = 705.0
+offset_bottom = 452.0
+scale = Vector2(3, 3)
+icon = ExtResource("2_jvk2p")
+flat = true
+
+[node name="Label" type="Label" parent="Level 2" unique_id=844678220]
+layout_mode = 0
+offset_left = 10.333334
+offset_top = 8.666667
+offset_right = 71.333336
+offset_bottom = 31.666668
+text = "Level 2"
+label_settings = SubResource("LabelSettings_5mc57")
+
+[node name="Level 1" type="Button" parent="." unique_id=2042533203]
+texture_filter = 1
+layout_mode = 0
+offset_left = 339.0
+offset_top = 413.0
+offset_right = 411.0
+offset_bottom = 453.0
+scale = Vector2(3, 3)
+icon = ExtResource("2_jvk2p")
+flat = true
+
+[node name="Label" type="Label" parent="Level 1" unique_id=1189788433]
+layout_mode = 0
+offset_left = 10.333334
+offset_top = 8.666667
+offset_right = 71.333336
+offset_bottom = 31.666668
+text = "Level 1"
+label_settings = SubResource("LabelSettings_5mc57")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1352220933]
+visible = false
+texture_filter = 1
+position = Vector2(380, 350)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.78028524
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=909416807]
+visible = false
+texture_filter = 1
+position = Vector2(447, 350)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.09195957
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="." unique_id=197179198]
+visible = false
+texture_filter = 1
+position = Vector2(507, 350)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.09195957
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="." unique_id=717495358]
+visible = false
+texture_filter = 1
+position = Vector2(672, 348)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.1294837
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="." unique_id=1333733698]
+visible = false
+texture_filter = 1
+position = Vector2(739, 348)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.09195957
+
+[node name="AnimatedSprite2D6" type="AnimatedSprite2D" parent="." unique_id=20729604]
+visible = false
+texture_filter = 1
+position = Vector2(799, 348)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_5mc57")
+frame_progress = 0.09195957
+
+[node name="AnimatedSprite2D7" type="AnimatedSprite2D" parent="." unique_id=1955863694]
+visible = false
+texture_filter = 1
+position = Vector2(446, 305)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_dv1h4")
+
+[node name="AnimatedSprite2D8" type="AnimatedSprite2D" parent="." unique_id=907376598]
+visible = false
+texture_filter = 1
+position = Vector2(738, 305)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_dv1h4")
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Level 2" to="." method="_on_level_2_pressed"]
+[connection signal="pressed" from="Level 1" to="." method="_on_level_1_pressed"]

@@ -1,5 +1,9 @@
 extends CharacterBody2D
 
+@onready var timer = $Label2/Timer
+@onready var timer_label = $Label2
+var can_kick = false
+
 const RUN_SPEED = 700
 const RUN_ACCELERATION = 5000
 const RUN_DECELERATION = 1000
@@ -137,7 +141,7 @@ func _update_aiming(delta: float) -> void:
 	if not Input.is_action_pressed("dash"):
 		aim_can_confirm = true
 
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed("jump") and is_on_floor():
 		stop_aiming()
 		velocity.y = JUMP_VELOCITY
 	elif aim_can_confirm and Input.is_action_just_pressed("dash"):
@@ -196,6 +200,7 @@ func _ready() -> void:
 	health_bar.max_value = health
 
 func _process(delta: float) -> void:
+	timer_label.text = "Time left: " + str(int(timer.time_left))
 	health_bar.value = health
 	Global.player_dashing_f(is_dashing)
 	arrow_pivot.look_at(get_global_mouse_position())
@@ -254,3 +259,17 @@ func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, input_direction * RUN_SPEED, rate * delta)
 
 	move_and_slide()
+
+
+func _on_button_pressed() -> void:
+	get_tree().change_scene_to_file(ResourceManager.title)
+
+
+func _on_timer_timeout() -> void:
+	if can_kick == true:
+		get_tree().change_scene_to_file(ResourceManager.title)
+	
+func start_timer(val):
+	can_kick = true
+	timer_label.show()
+	timer.start(val)
